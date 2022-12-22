@@ -92,7 +92,7 @@ local currentvalues = {
 
 theoutputvaluea = "no"
 
-local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue)
+local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue,tryagain)
 
     local output = 0
     local outputBias = 3
@@ -168,5 +168,9 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
 
     current = 1
 
-    --goto startofnet
+    if tryagain then
+        goto startofnet
+    else
+        return
+    end
 end
