@@ -92,7 +92,7 @@ local currentvalues = {
 
 theoutputvaluea = "no"
 
-local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue,tryagain)
+local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue)
 
     local output = 0
     local outputBias = 3
@@ -121,16 +121,16 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
             else
                 print("1")
             end
-            outputvalue = 1 --success
-            return
+            theoutputvaluea = 1
+            return;
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            outputvalue = 0 --fail
-            --code moves onto the was wrong section
+            theoutputvaluea = 0
+            --there's gotta be a better way to do this
         end
     elseif currentadd < outputBias then
         if mode == 0 then
@@ -139,20 +139,20 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
             else
                 print("1")
             end
-            outputvalue = 1 --success
-            return
+            theoutputvaluea = 1
+            return;
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            outputvalue = 0 --fail
-            --code moves onto the was wrong section
+            theoutputvaluea = 0
+            --there's gotta be a better way to do this
         end
     end
 
-    --was wrong
+    --didnt fire
     current = 1
     if mode == 1 then
         while current < gridx*gridy do
@@ -168,9 +168,5 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
 
     current = 1
 
-    if tryagain == 1 then
-        goto startofnet
-    else
-        return
-    end
+    --goto startofnet
 end
