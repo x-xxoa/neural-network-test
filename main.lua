@@ -9,11 +9,14 @@ the "mode" value is either for a circle or a square, 1 for circle, 0 for square.
 the "gridx" and "gridy" values are the size of the grid, the dimensions of the input neurons. (YES I GET IT IT SOUNDS
 LIKE GRITTY)
 
-unfortunately for right now you have to adjust the input table, weights and current values table or else it won't work
-and right now im not fixing it because during my lunch time at school im working on this so maybe ill update it later.
+i'm working on making the inputweights and currentvalues better so i'll commit it in the next build because right now i 
+dont trust myself.
 
-the "debug" value shows the debug information like the bias and the table values, if its 0 it will just print "1" or "0"
-which cooresponds to the circle or the square.
+the "debug" value shows the debug information like the bias and the table values, if its 0 it will just print "1" or "0" 
+which cooresponds to the circle or the square. (must be a 1 or a 0)
+
+if the "tryagain" value is 1 then it will try again without exiting the function and if it is 0 then it will return and
+exit the function (not recommended in normal use but for training might be good)
 
 ]]--
 
@@ -89,7 +92,7 @@ local currentvalues = {
 
 theoutputvaluea = "no"
 
-local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue)
+local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue,tryagain)
 
     local output = 0
     local outputBias = 3
@@ -118,16 +121,16 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
             else
                 print("1")
             end
-            theoutputvaluea = 1
-            return;
+            outputvalue = 1 --success
+            return outputvalue
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            theoutputvaluea = 0
-            --there's gotta be a better way to do this
+            outputvalue = 0 --fail
+            --code moves onto the was wrong section
         end
     elseif currentadd < outputBias then
         if mode == 0 then
@@ -136,16 +139,16 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
             else
                 print("1")
             end
-            theoutputvaluea = 1
-            return;
+            outputvalue = 1 --success
+            return outputvalue
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            theoutputvaluea = 0
-            --there's gotta be a better way to do this
+            outputvalue = 0 --fail
+            --code moves onto the was wrong section
         end
     end
 
@@ -165,5 +168,9 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
 
     current = 1
 
-    goto startofnet
+    if tryagain == 1 then
+        goto startofnet
+    else
+        return outputvalue
+    end
 end
