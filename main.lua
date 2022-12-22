@@ -122,7 +122,7 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
                 print("1")
             end
             outputvalue = 1 --success
-            return outputvalue
+            return
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
@@ -140,7 +140,7 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
                 print("1")
             end
             outputvalue = 1 --success
-            return outputvalue
+            return
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
@@ -171,6 +171,6 @@ local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,deb
     if tryagain == 1 then
         goto startofnet
     else
-        return outputvalue
+        return
     end
 end
