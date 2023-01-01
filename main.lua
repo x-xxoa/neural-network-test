@@ -4,31 +4,96 @@ DOCUMENTATION:
 
 the "tableToInput" value is the table for the input.
 
-the "mode" value is either for a circle or a square, 1 expected output and 0 for wrong answer.
+the "mode" value is either for a circle or a square, 1 for circle, 0 for square.
 
-the "debug" value shows the debug information like the bias and the table values, if its 0 it will just print "1" or "0".
-(must be a 1 or a 0)
+the "gridx" and "gridy" values are the size of the grid, the dimensions of the input neurons. (YES I GET IT IT SOUNDS
+LIKE GRITTY)
+
+i'm working on making the inputweights and currentvalues better so i'll commit it in the next build because right now i 
+dont trust myself.
+
+the "debug" value shows the debug information like the bias and the table values, if its 0 it will just print "1" or "0" 
+which cooresponds to the circle or the square. (must be a 1 or a 0)
 
 if the "tryagain" value is 1 then it will try again without exiting the function and if it is 0 then it will return and
-exit the function even if it is not the expected output
+exit the function (not recommended in normal use but for training might be good)
+
 ]]--
 
-local function main(tableToInput,mode,debug,tryagain)
+local inputweights = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+}
 
-    --creating the tables
-    local currentvalues = {}
-    local inputweights = {}
+local currentvalues = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+}
 
-    repeat
-        table.insert(currentvalues,0)
-    until #currentvalues == #tableToInput
+theoutputvaluea = "no"
 
-    repeat
-        table.insert(inputweights,0)
-    until #inputweights == #tableToInput
+local function main(tableToInput,currentvalues,inputweights,mode,gridx,gridy,debug,outputvalue,tryagain)
 
-    --actual neural network stuff
-    local valueToReturn = 0
     local output = 0
     local outputBias = 3
 
@@ -36,7 +101,7 @@ local function main(tableToInput,mode,debug,tryagain)
 
     local current = 1
 
-    while current < #tableToInput do
+    while current < gridx*gridy do
         currentvalues[current] = tableToInput[current]*inputweights[current]
         current = current + 1
     end
@@ -44,7 +109,7 @@ local function main(tableToInput,mode,debug,tryagain)
     current = 1
     local currentadd = 0
 
-    while current < #tableToInput do
+    while current < gridx*gridy do
         currentadd = currentadd + currentvalues[current]
         current = current + 1
     end
@@ -56,15 +121,15 @@ local function main(tableToInput,mode,debug,tryagain)
             else
                 print("1")
             end
-            valueToReturn = 1
-            return valueToReturn
+            theoutputvaluea = 1
+            return;
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            valueToReturn = 0
+            theoutputvaluea = 0
             --there's gotta be a better way to do this
         end
     elseif currentadd < outputBias then
@@ -74,15 +139,15 @@ local function main(tableToInput,mode,debug,tryagain)
             else
                 print("1")
             end
-            valueToReturn = 1
-            return valueToReturn
+            theoutputvaluea = 1
+            return;
         else
             if debug == 1 then
                 print("0\n\ncurrentadd: "..currentadd.."\noutput bias: "..outputBias.."\n\nTABLE VALUES:\n\nTHESE ARENT DONE YET")
             else
                 print("0")
             end
-            valueToReturn = 0
+            theoutputvaluea = 0
             --there's gotta be a better way to do this
         end
     end
@@ -90,12 +155,12 @@ local function main(tableToInput,mode,debug,tryagain)
     --didnt fire
     current = 1
     if mode == 1 then
-        while current < #tableToInput do
+        while current < gridx*gridy do
             inputweights[current] = inputweights[current] + tableToInput[current]
             current = current + 1
         end
     elseif mode == 0 then
-        while current < #tableToInput do
+        while current < gridx*gridy do
             inputweights[current] = inputweights[current] - tableToInput[current]
             current = current + 1
         end
@@ -106,29 +171,6 @@ local function main(tableToInput,mode,debug,tryagain)
     if tryagain then
         goto startofnet
     else
-        return valueToReturn
+        return
     end
 end
-
-local wasd = {
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-}
-
-local thisisavalue = 0
-
-thisisavalue = main(wasd,0,1,0)
