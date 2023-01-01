@@ -1,8 +1,7 @@
 --TODO LIST--
 
+* fix the issue where it resets the inputweights to 0 *
 * write code to import from file or input from camera *
 * actually print the table values in the debug prints *
 
 --DONE--
-
-* fix the issue where it resets the inputweights to 0 *
