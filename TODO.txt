@@ -1,0 +1,4 @@
+*todo*
+
+*read bitmap files and create bitmap files for image tests*
+*program the adjustment code*
