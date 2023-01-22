@@ -1,3 +1,5 @@
+--this doesn't hav emuch documentation, clobbered together in 30 minutes
+
 local function test(t,c,w,b,ob,ow,r) --inputtable, currentvalues, inputweights, biases, outbias, outweight, returntable
     --declare the functions
     local function calcnode(t,w,b,n) --gets the dot product of the last layer and the weights and then adds the bias to it. t is the last layer, w is weights, b is the bias and n is the node number
