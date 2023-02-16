@@ -305,14 +305,14 @@ local function adjust(intable,out,expectedout,learningrate,cross)
 
     --adjust the output layer biases
     for i = 1,#out do
-        _G["ob"][i] = _G["ob"][i] - gradw[i]
+        _G["ob"][i] = _G["ob"][i] - gradb[i]
     end
 
     --adjust the rest of the biases
     for a = 1,#out do
         for b = _G["lc"],1,-1 do
             for i = 1,#_G["b"..b] do
-                _G["b"..b][i] = _G["b"..b][i] - gradw[a]
+                _G["b"..b][i] = _G["b"..b][i] - gradb[a]
             end
         end
     end
