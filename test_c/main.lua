@@ -280,7 +280,7 @@ local function adjust(intable,out,expectedout,learningrate,cross)
 
     --get gradb
     for i = 1,#out do
-        gradb[i] = ((out[i]-expectedout[i])*dsig_wsum)*learningrate
+        gradb[i] = ((expectedout[i]-out[i])*dsig_wsum)*learningrate
     end
     
     --adjust weights
